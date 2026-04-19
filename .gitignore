@@ -23,3 +23,16 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+/images/README.md
+
+# Local AI / agent settings
+/.claude
+/.codex
+
+# Internal drafting notes
+/docs/ARTICLE.md
+
+# Browser / test artifacts
+/test-results
+/playwright-report
+/blob-report
