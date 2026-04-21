@@ -38,10 +38,10 @@ cp .env.example .env
 php artisan key:generate
 touch database/database.sqlite
 php artisan migrate --seed
-php artisan serve --port=8080
+php artisan serve
 ```
 
-`http://127.0.0.1:8080` にアクセスすると `/search` にリダイレクトされます。
+`http://127.0.0.1:8000` にアクセスすると `/search` にリダイレクトされます。
 
 ### `.env` の推奨設定
 
